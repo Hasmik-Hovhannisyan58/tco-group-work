@@ -18,25 +18,60 @@ function createDir(baseDir,folderCount,fileName,fileContent){
     console.log(`Created file at ${filePath}`)//fayly hajox stexcvelu depqym tpum e hetevyaly
 }
 
-function deleteDir(baseDir,folderCount){
-    let currentDir=baseDir
-    for(let i=1;i<-folderCount;i++){
-        currentDir=path.join(currentDir,`folder_${i}`)
-        if(fs.existsSync(currentDir)){
-            fs.rmSync(currentDir,{recursive:true,force:true})
-            console.log(`Delete all contents in ${currentDir}`)
-        }else{
-            console.log(`${currentDir} does not exist.`)
-        }
+
+
+// function  deleteDir(dirName){
+//     if(fs.existsSync(dirName)){
+//         fs.rmSync(dirName,{recursive:true})
+//     }
+// }
+
+
+function deleteDir(baseDir, folderCount, fileName) {
+    let currentDir = baseDir;
+
+    // stexcum enq fayli uxin
+    for (let i = 1; i <= folderCount; i++) {
+        currentDir = path.join(currentDir, `folder_${i}`);
+    }
+    const filePath = path.join(currentDir, fileName);
+
+    // jnjum e ete fayly goyutyun uni
+    if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+        console.log(`Deleted file at ${filePath}`);
+    } else {
+        console.log(`File not found: ${filePath}`);
     }
 
+    // jnjum enq meky myusi hetevic
+    for (let i = folderCount; i > 0; i--) {
+        currentDir = baseDir;
+        for (let j = 1; j <= i; j++) {
+            currentDir = path.join(currentDir, `folder_${j}`);
+        }
+
+        if (fs.existsSync(currentDir)) {
+            try {
+                fs.rmdirSync(currentDir); //miayn dadark txtapanaky jnjelu hamar
+                // console.log(`Deleted folder: ${currentDir}`);//ete cankanum enq tpel jnjman hertakanutyuny
+            } catch (err) {
+                console.log(`Could not delete folder (not empty): ${currentDir}`);
+            }
+        } else {
+            console.log(`Folder not found: ${currentDir}`);
+        }
+    }
 }
 
-const baseDir=path.join(__dirname);
-const folderCount=5
-const fileName='example.txt'
-const fileContent='This is an example text file.'
 
-createDir(baseDir,folderCount,fileName,fileContent)
+const baseDir = path.join(__dirname);
+const folderCount = 5;
+const fileName = 'example.txt';
+const fileContent = 'This is an example text file.';
 
-// deleteDir(baseDir,folderCount)//Gurgen jan chgitem inchi delety chi ashxatum mi tarberake prceci ynthanur papkes korav :(
+
+// createDir(baseDir, folderCount, fileName, fileContent);
+
+
+deleteDir(baseDir, folderCount, fileName);
